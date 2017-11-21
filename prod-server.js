@@ -11,7 +11,7 @@ const port = process.env.PORT;
 const app = express();
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/todo', { useMongoClient: true});
+mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true});
 
 app.use(bodyParser.json())
 
