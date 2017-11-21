@@ -1,0 +1,20 @@
+{
+  "name": "todo",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "start": "node prod-server.js" 
+  },
+  "engines": {
+    "node": "8.1.4"
+  },
+  "private": true,
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.0",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.13.4",
+    "validator": "^9.1.1"
+  }
+}
