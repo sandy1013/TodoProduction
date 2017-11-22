@@ -1,0 +1,157 @@
+-> Requirements for Web apps
+    -> Current Audience?
+    -> Target Audience?
+    -> Data Driven?
+    -> Browsers?
+    -> OS - Hardware?
+    -> Connectivity - cell, wifi, low bandwidth, capped bandwidth
+    -> offline?
+    -> Context
+        -> At home, office, train, car
+        -> Walking, Sitting Standing
+        -> Early, late, tired, alert, stressed
+    -> Performance
+-> Design for all users.
+    -> Mobile Support
+    -> Text, images and media.
+    -> Prioritise Content not Design.
+    -> Mobile - Less text is more.
+    -> Data Budget.
+    -> ***Html -> **css -> *javascript
+    -> Validations!!!
+    -> Resposive Layout -> mostly images -> always content before layout.
+    -> Why?
+        -> distribution? -> map app ->  browser vs native
+        -> Capability -> Native -> push, fast, device access
+                      -> Web -> distribution
+                      -> Progressive Web Apps -> Notifications, device access, Home screen and All web based.
+                      -> 3'ses to abandon website.
+        -> Service Workers.
+-> Service Workers (Progressive web apps)
+    -> Intoduction
+        -> Amp and Service workes => super fast app.
+        -> New Api getting added
+            -> Web Payments Api
+            -> Credential Management Api
+        -> Web Apps 
+            -> reach -> 3.3 N vs 8.9 Web in millions
+            -> Engament -> 201.0 N vs 10.9 web im millions
+        -> Cost spend to aqquire a user.
+            -> $6 per user Native
+            -> $0.8 per Mobile Web.
+        -> Technology
+            -> options
+                -> Built from ground up if possible or build page to page.
+            -> Fetch(replaces xmlHttpRequests) & Pormises.
+                fetch('index.html').then((response) => {
+                    console.log(response.text());
+                    //console.log(response.json());
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            -> More Anonymous functions -> () => {}
+        -> Service Workers Useage
+            -> Fetch -> supports cors(Cross origin resource sharing).
+            -> Fetch Api
+                -> fetch throws error if server returns a normal responce.
+                -> always look for status ok before execting code!!!
+                    if(!response.ok) {
+                        return error;
+                    }
+                -> cors
+                    -> outside origin -> http,port and host
+                    -> add origin header 
+                        ->  access-control-allow-orign if server supports else use JSONP
+                    -> fetch uses corse by default.
+                    -> fetch('/video.mp4', {
+                            method: 'HEAD'
+                        }).then((response) => {
+                            var headers = response.headers.
+                            return headers.get('content-length'); // returns the metadata of the content without loading the actual content.
+                        });
+                    -> methods, HEAD,POST.. with formdata  support.
+                    -> chain promises are suported.
+                        -> fetch('/image.png'})
+                           .then(readDataAsBlob)
+                           .then(makeImageNode);
+
+                        -> var newImage = document.createElement('img');
+                           var url = URL>createObjectURL(blob); // creates a base64 Image
+                           newImage.src = url;
+                           return newImage;
+            -> Cache API.
+                -> to store assets that have URL
+                    -> methods
+                        -> add(request)
+                        -> addAll(request)
+                        -> put(request)
+                        -> delete(request)
+                        -> keys(request?, options?)
+                        -> match(request?, options?)
+                        -> matchAll(request?, options?)
+                    -> entry point self.caches(collection of cache)
+                    -> cache storage is limited for each origin -> browser either delets the entire cache or none at all.
+            -> Service Workers Events
+                -> Install
+                    -> build cache and init resources. 
+                -> activate
+                    -> update cache
+                -> fetch
+                    -> Retrive from cache, network or database.
+                
+                -> Cycle
+
+                    -> Service Worker ------------> Install ------------> activate 
+                                                        |
+                                                        |
+                                                        |
+                                                        |
+                                Cache S<------------ Network
+                    
+                    -> Install
+                        -> 
+                            var cacheName = 'app-shell-cache-v1';
+                            var filesToCache = ['/', '/index.html', ...]
+                            self.addEventListener('install', (event) => {
+                                event.waitUntil(
+                                    caches.open(cacheName).then((cache) => {
+                                        return cache.addAll(filesToCache);
+                                    }).then(() => {
+                                        return self.skipWaiting();
+                                    });
+                                );
+                            }); // perivious version is still running so take care not to disrupt it
+                    -> activate
+                        -> Remove outdated caches
+                            self.addEventListener('activate', (event) => {
+                                event.waitUntil(
+                                    caches.keys().then((keyList)) => {
+                                        return Promise.all(keyList
+                                        .map(key => {
+                                            if(key !=== cacheName) {
+                                                return caches.delete(key);
+                                            }
+                                        }))
+                                    }
+                                )
+                            });
+                        
+                    -> fetch offline requests 
+                        -> 
+                            self.addEventListener('fetch', (event) => {
+                                event.respondWith(
+                                    caches.match(event.request)
+                                    .then((response) => {
+                                        return response || fetch(event.request);
+                                    });
+                                )
+                            })
+                                                        3                   
+                            page <-------------------------------------------------> cache
+                                |                        |
+                                |                        |
+                            1   |                        |
+                                |                        |
+                                |             2          |
+                            Service Worker ---------> Network
