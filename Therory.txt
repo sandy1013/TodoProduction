@@ -155,3 +155,26 @@
                                 |                        |
                                 |             2          |
                             Service Worker ---------> Network
+-> Index DB 
+    -> callback based
+    -> Object store
+        -> idb.open(name, version, {upgradeCallback}) -> returns a promises
+        -> create Object store
+            -> if(!upgradeDB.objectstoreNames.contain('store')){
+                upgradeDb.createObjectStore('store);
+            }
+            -> upgradeDb.createObjectStore('people', {keypath: 'email'}); //email is prmary key
+            -> upgradeDb.createObjectStore('people', {autoIncrement: true}); //store numbers ssseperate from object
+            -> upgradeDb.createObjectStore('people', {keypath: 'email', autoIncrement: true}); //store numbers in id property
+            -> store.createIndex('email, 'email', {unique: true});
+            -> suports CRUD operations.
+            -> add, get, put, delete, getAll, and cursor(key or index extraction) methods.
+            -> Transaction support of integrity read, write and readwrite.
+-> Responsive Design
+    -> Different users, Different Data and Different Sizes.
+    -> Dont do fixed layout***.
+    -> use media quires form layouts.
+    -> flex design.
+    -> content first, UI next.
+-> 
+
