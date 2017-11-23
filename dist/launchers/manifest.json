@@ -1,5 +1,6 @@
 {
   "name": "Todo Application",
+  "short_name": "ToDo",
   "icons": [
     {
       "src": "TodoLauncher-96x196.png",
@@ -40,5 +41,7 @@
   ],
   "start_url": "../index.html",
   "display": "standalone",
-  "orientation": "portrait"
+  "orientation": "any",
+  "background_color": "#dc3f3f",
+  "theme_color": "#dc3f3f"
 }
